@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { JudiciaryService, RequiredFieldKey, PaymentAttempt } from '@/lib/types';
 import { DYNAMIC_FIELD_CONFIGS, formatCurrency } from '@/lib/utils';
+import PageSuspenseFallback from '@/components/PageSuspenseFallback';
 import { 
   CreditCard, 
   Scale, 
@@ -19,7 +20,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 
-export default function PaymentInitiationPage() {
+function PaymentInitiationPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialServiceId = searchParams.get('serviceId') || '';
@@ -491,5 +492,13 @@ export default function PaymentInitiationPage() {
       )}
 
     </div>
+  );
+}
+
+export default function PaymentInitiationPage() {
+  return (
+    <Suspense fallback={<PageSuspenseFallback />}>
+      <PaymentInitiationPageContent />
+    </Suspense>
   );
 }

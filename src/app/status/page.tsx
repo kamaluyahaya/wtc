@@ -1,13 +1,14 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { PaymentAttempt, ElectronicReceipt } from '@/lib/types';
 import { formatCurrency, formatDate } from '@/lib/utils';
+import PageSuspenseFallback from '@/components/PageSuspenseFallback';
 import { Search, Clock, CheckCircle2, XCircle, AlertTriangle, ArrowRight, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 
-export default function CheckPaymentStatusPage() {
+function CheckPaymentStatusPageContent() {
   const searchParams = useSearchParams();
   const initialRef = searchParams.get('ref') || '';
 
@@ -195,5 +196,13 @@ export default function CheckPaymentStatusPage() {
       )}
 
     </div>
+  );
+}
+
+export default function CheckPaymentStatusPage() {
+  return (
+    <Suspense fallback={<PageSuspenseFallback />}>
+      <CheckPaymentStatusPageContent />
+    </Suspense>
   );
 }

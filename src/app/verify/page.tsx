@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { ElectronicReceipt, PaymentAttempt } from '@/lib/types';
 import { formatCurrency, formatDate } from '@/lib/utils';
+import PageSuspenseFallback from '@/components/PageSuspenseFallback';
 import { 
   FileCheck, 
   Search, 
@@ -20,7 +21,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
-export default function VerificationModulePage() {
+function VerificationModulePageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const initialQuery = searchParams.get('query') || searchParams.get('ref') || '';
@@ -283,5 +284,13 @@ export default function VerificationModulePage() {
       )}
 
     </div>
+  );
+}
+
+export default function VerificationModulePage() {
+  return (
+    <Suspense fallback={<PageSuspenseFallback />}>
+      <VerificationModulePageContent />
+    </Suspense>
   );
 }
